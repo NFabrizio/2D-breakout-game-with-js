@@ -23,6 +23,23 @@
   const paddleHeight = 10;
   const paddleWidth = 75;
   let paddleX = (canvas.width - paddleWidth) / 2;
+  let rightPressed = false;
+  let leftPressed = false;
+
+  const keyDownHandler = (event) => {
+    if(event.keyCode == 39) {
+      rightPressed = true;
+    } else if (event.keyCode == 37) {
+      leftPressed = true;
+    }
+  };
+  const keyUpHandler = (event) => {
+    if(event.keyCode == 39) {
+      rightPressed = false;
+    } else if (event.keyCode == 37) {
+      leftPressed = false;
+    }
+  };
   const drawBall = () => {
     ctx.beginPath();
     ctx.arc(x, y, ballRadius, 0, Math.PI*2, false);
@@ -40,6 +57,7 @@
   const draw = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBall();
+    drawPaddle();
     x += dx;
     y += dy;
 
@@ -50,7 +68,16 @@
     if(y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
       dy = -dy;
     }
+
+    if(rightPressed && paddleX < canvas.width - paddleWidth) {
+      paddleX += 7;
+    } else if (leftPressed && paddleX > 0) {
+      paddleX -= 7;
+    }
   };
+
+  document.addEventListener('keydown', keyDownHandler, false);
+  document.addEventListener('keyup', keyUpHandler, false);
 
   setInterval(draw, 10);
 </script>
