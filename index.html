@@ -36,7 +36,11 @@
   for(column = 0; column < brickColumnCount; column++) {
     bricks[column] = [];
     for(row = 0; row < brickRowCount; row++) {
-      bricks[column][row] = { x: 0, y: 0 };
+      bricks[column][row] = {
+        x: 0,
+        y: 0,
+        status: 1
+      };
     }
   }
 
@@ -71,15 +75,31 @@
   const drawBricks = () => {
     for(column = 0; column < brickColumnCount; column++) {
       for(row = 0; row < brickRowCount; row++) {
-        const brickX = (column * (brickWidth + brickPadding)) + brickOffsetLeft;
-        const brickY = (row * (brickHeight + brickPadding)) + brickOffsetTop;
-        bricks[column][row].x = brickX;
-        bricks[column][row].y = brickY;
-        ctx.beginPath();
-        ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle = '#0095DD';
-        ctx.fill();
-        ctx.closePath();
+        if (bricks[column][row].status == 1) {
+          const brickX = (column * (brickWidth + brickPadding)) + brickOffsetLeft;
+          const brickY = (row * (brickHeight + brickPadding)) + brickOffsetTop;
+          bricks[column][row].x = brickX;
+          bricks[column][row].y = brickY;
+          ctx.beginPath();
+          ctx.rect(brickX, brickY, brickWidth, brickHeight);
+          ctx.fillStyle = '#0095DD';
+          ctx.fill();
+          ctx.closePath();
+        }
+      }
+    }
+  };
+  const collisionDetection = () => {
+    for (column = 0; column < brickColumnCount; column++) {
+      for (row =0; row < brickRowCount; row++) {
+        let brick = bricks[column][row];
+
+        if (brick.status == 1) {
+          if (x > brick.x && x < brick.x + brickWidth && y > brick.y && y < brick.y + brickHeight) {
+            dy = -dy;
+            brick.status = 0;
+          }
+        }
       }
     }
   };
@@ -88,6 +108,7 @@
     drawBricks();
     drawBall();
     drawPaddle();
+    collisionDetection();
     x += dx;
     y += dy;
 
