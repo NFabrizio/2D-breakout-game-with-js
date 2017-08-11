@@ -60,6 +60,15 @@
       leftPressed = false;
     }
   };
+  const mouseMoveHandler = (event) => {
+    const relativeX = event.clientX - canvas.offsetLeft;
+
+    if (relativeX > 0 && relativeX < canvas.width) {
+console.log(`canvas.offsetLeft: ${canvas.offsetLeft}`);
+      paddleX = Math.min(Math.max((relativeX - paddleWidth / 2), 0), canvas.width - paddleWidth);
+console.log(paddleX);
+    }
+  };
   const drawBall = () => {
     ctx.beginPath();
     ctx.arc(x, y, ballRadius, 0, Math.PI*2, false);
@@ -153,6 +162,7 @@
 
   document.addEventListener('keydown', keyDownHandler, false);
   document.addEventListener('keyup', keyUpHandler, false);
+  document.addEventListener('mousemove', mouseMoveHandler, false);
 
   const interval = setInterval(draw, 10);
 </script>
