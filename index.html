@@ -34,6 +34,7 @@
   const brickOffsetLeft = 30;
   const bricks = [];
   let score = 0;
+  let lives = 3;
 
   for(column = 0; column < brickColumnCount; column++) {
     bricks[column] = [];
@@ -64,9 +65,8 @@
     const relativeX = event.clientX - canvas.offsetLeft;
 
     if (relativeX > 0 && relativeX < canvas.width) {
-console.log(`canvas.offsetLeft: ${canvas.offsetLeft}`);
+      // Keep the entire paddle within the bounds of the canvas
       paddleX = Math.min(Math.max((relativeX - paddleWidth / 2), 0), canvas.width - paddleWidth);
-console.log(paddleX);
     }
   };
   const drawBall = () => {
@@ -125,12 +125,18 @@ console.log(paddleX);
     ctx.fillStyle = '#0095DD';
     ctx.fillText(`Score: ${score}`, 8, 20);
   };
+  const drawLives = () => {
+    ctx.font = '16px Arial';
+    ctx.fillStyle = '#0095DD';
+    ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
+  };
   const draw = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBricks();
     drawBall();
     drawPaddle();
     drawScore();
+    drawLives();
     collisionDetection();
     x += dx;
     y += dy;
@@ -147,9 +153,18 @@ console.log(paddleX);
           dy = -dy;
         }
       } else {
-        clearInterval(interval);
-        alert('GAME OVER');
-        document.location.reload();
+        lives -= 1;
+        if (!lives) {
+          clearInterval(interval);
+          alert('GAME OVER');
+          document.location.reload();
+        } else {
+          x = canvas.width / 2;
+          y = canvas.height - 30;
+          dx = 2;
+          dy = -2;
+          paddleX = (canvas.width - paddleWidth) / 2;
+        }
       }
     }
 
