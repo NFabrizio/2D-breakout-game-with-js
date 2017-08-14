@@ -111,7 +111,6 @@
             brick.status = 0;
             score++;
             if (score === brickRowCount * brickColumnCount) {
-              clearInterval(interval);
               alert('YOU WIN! CONGRATULATIONS!');
               document.location.reload();
             }
@@ -155,7 +154,6 @@
       } else {
         lives -= 1;
         if (!lives) {
-          clearInterval(interval);
           alert('GAME OVER');
           document.location.reload();
         } else {
@@ -173,13 +171,15 @@
     } else if(leftPressed && paddleX > 0) {
       paddleX -= 7;
     }
+
+    requestAnimationFrame(draw);
   };
 
   document.addEventListener('keydown', keyDownHandler, false);
   document.addEventListener('keyup', keyUpHandler, false);
   document.addEventListener('mousemove', mouseMoveHandler, false);
 
-  const interval = setInterval(draw, 10);
+  draw();
 </script>
 
 </body>
