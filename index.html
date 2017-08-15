@@ -19,10 +19,15 @@
   let y = canvas.height - 30;
   let dx = 2;
   let dy = -2;
+  let speedX = 1;
+  let speedY = 1;
   const ballRadius = 10;
   const paddleHeight = 10;
   const paddleWidth = 75;
+  const paddleQuarter = paddleWidth / 4;
   let paddleX = (canvas.width - paddleWidth) / 2;
+  let paddleLeft;
+  let paddleRight;
   let rightPressed = false;
   let leftPressed = false;
   const brickRowCount = 3;
@@ -137,8 +142,8 @@
     drawScore();
     drawLives();
     collisionDetection();
-    x += dx;
-    y += dy;
+    x += dx * speedX;
+    y += dy * speedY;
 
     if(x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
       dx = -dx;
@@ -148,8 +153,20 @@
       dy = -dy;
     } else if(y + dy > canvas.height - ballRadius) {
       if(x > paddleX && x < paddleX + paddleWidth) {
-        if(y = y - paddleHeight) {
+        if (x < paddleLeft && dx < 0) {
+          dy = -1.5;
+          speedY += 2;
+        } else if (x > paddleRight && dx > 0) {
+          dy = -1.5;
+          speedY += 2;
+        } else if (y = y - paddleHeight) {
           dy = -dy;
+
+          if (speedY > 2) {
+            speedY = speedY -= 2;
+          } else {
+            speedY = 1;
+          }
         }
       } else {
         lives -= 1;
@@ -161,6 +178,8 @@
           y = canvas.height - 30;
           dx = 2;
           dy = -2;
+          speedX = 1;
+          speedY = 1;
           paddleX = (canvas.width - paddleWidth) / 2;
         }
       }
@@ -171,6 +190,8 @@
     } else if(leftPressed && paddleX > 0) {
       paddleX -= 7;
     }
+    paddleLeft = paddleX + paddleQuarter;
+    paddleRight = paddleX + paddleWidth - paddleQuarter;
 
     requestAnimationFrame(draw);
   };
